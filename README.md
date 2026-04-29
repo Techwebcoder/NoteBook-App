@@ -56,12 +56,14 @@ Install these packages before running the project.
 
 ## Frontend Requirements
 
+
 ```bash
 npm install react-router-dom
+```
 
-
-## Frontend Requirements
-
+## Backend Requirements
+```bash
 npm install express mongoose bcryptjs jsonwebtoken express-validator cors dotenv
 
 npm install concurrently nodemon --save-dev
+```
