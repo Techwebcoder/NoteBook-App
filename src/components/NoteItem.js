@@ -1,7 +1,12 @@
 import React from "react";
 
 const NoteItem = (props) => {
-  const { note, deleteNote, showAlert } = props;
+  const { note, deleteNote, showAlert, updateNote } = props;
+
+  const handleDelete = () => {
+    deleteNote(note._id);
+    showAlert("Note deleted successfully", "danger");
+  };
 
   return (
     <div className="col-md-3">
@@ -10,35 +15,35 @@ const NoteItem = (props) => {
           <div className="d-flex justify-content-between align-items-start">
             <h5
               className="card-title mb-0"
-              style={{
-                maxWidth: "75%",
-                wordWrap: "break-word",
-              }}
+              style={{ maxWidth: "75%", wordWrap: "break-word" }}
             >
               {note.title}
             </h5>
 
             <div className="d-flex">
-              <i
-                className="fa-solid fa-trash mx-2"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  deleteNote(note.id);
-                  showAlert("Note deleted successfully", "danger");
-                }}
-              ></i>
+              <button
+                type="button"
+                className="btn btn-sm p-0 mx-2"
+                onClick={handleDelete}
+              >
+                <i className="fa-solid fa-trash"></i>
+              </button>
 
-              <i
-                className="fa-regular fa-pen-to-square mx-2"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  showAlert("Note updated successfully", "success");
-                }}
-              ></i>
+              <button
+                type="button"
+                className="btn btn-sm p-0 mx-2"
+                onClick={() => updateNote(note)}
+              >
+                <i className="fa-regular fa-pen-to-square"></i>
+              </button>
             </div>
           </div>
 
           <p className="card-text mt-2">{note.description}</p>
+
+          <p className="card-text">
+            <small className="text-muted">{note.tag}</small>
+          </p>
         </div>
       </div>
     </div>
