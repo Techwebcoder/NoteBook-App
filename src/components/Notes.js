@@ -169,6 +169,7 @@ const Notes = (props) => {
                 deleteNote={deleteNote}
                 updateNote={updateNote}
                 showAlert={props.showAlert}
+                mode={props.mode}
               />
             );
           })}

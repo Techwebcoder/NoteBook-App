@@ -5,14 +5,36 @@ const NavBar = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  console.log("Navbar mode:", props.mode);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
-    props.showAlert("Logged out successfully", "danger");
+    props.showAlert("Logged out successfully", "success");
     navigate("/login");
   };
 
+  let modeButton;
+
+  if (props.mode === "light") {
+    modeButton = (
+      <span key="moon">
+        <i className="fa-solid fa-moon me-2"></i>
+        Dark
+      </span>
+    );
+  } else {
+    modeButton = (
+      <span key="sun">
+        <i className="fa-solid fa-sun me-2"></i>
+        Light
+      </span>
+    );
+  }
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav
+      className={`navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode} shadow-sm`}
+    >
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           iNotebook
@@ -23,15 +45,12 @@ const NavBar = (props) => {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        <div className="collapse navbar-collapse">
+          <ul className="navbar-nav me-auto">
             <li className="nav-item">
               <Link
                 className={`nav-link ${
@@ -55,18 +74,26 @@ const NavBar = (props) => {
             </li>
           </ul>
 
+          <button
+            className={`btn btn-outline-${
+              props.mode === "light" ? "dark" : "light"
+            } mx-2`}
+            onClick={props.toggleMode}
+          >
+            {modeButton}
+          </button>
+
           {!localStorage.getItem("token") ? (
-            <form className="d-flex">
+            <div className="d-flex">
               <Link className="btn btn-primary mx-1" to="/login">
                 Login
               </Link>
-
               <Link className="btn btn-primary mx-1" to="/signup">
                 Signup
               </Link>
-            </form>
+            </div>
           ) : (
-            <button className="btn btn-danger" onClick={handleLogout}>
+            <button className="btn btn-danger mx-1" onClick={handleLogout}>
               Logout
             </button>
           )}
