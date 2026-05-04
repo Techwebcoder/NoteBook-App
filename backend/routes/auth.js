@@ -16,17 +16,20 @@ router.post(
     body('password', 'Password must be at least 5 characters').isLength({ min: 5 })
   ],
   async (req, res) => {
+    let success = false;
     const result = validationResult(req);
 
     if (!result.isEmpty()) {
-      return res.status(400).json({ errors: result.array() });
+      success = false;
+      return res.status(400).json({ success , errors: result.array() });
     }
 
     try {
       let user = await User.findOne({ email: req.body.email });
 
       if (user) {
-        return res.status(400).json({ error: 'Sorry, a user with this email already exists' });
+        success = false;
+        return res.status(400).json({ success , error: 'Sorry, a user with this email already exists' });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -45,8 +48,8 @@ router.post(
       };
 
       const authtoken = jwt.sign(data, JWT_SECRET);
-
-      res.json({ authtoken });
+      success = true;
+      res.json({ success , authtoken });
 
     } catch (error) {
       console.error(error.message);
@@ -64,6 +67,7 @@ router.post(
   ],
   async (req, res) => {
     const result = validationResult(req);
+    let success = false;
 
     if (!result.isEmpty()) {
       return res.status(400).json({ errors: result.array() });
@@ -75,13 +79,15 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ error: 'Please try to enter the correct credentials' });
+        success = false;
+        return res.status(400).json({success ,  error: 'Please try to enter the correct credentials' });
       }
 
       const passwordCompare = await bcrypt.compare(password, user.password);
 
       if (!passwordCompare) {
-        return res.status(400).json({ error: 'Please try to enter the correct credentials' });
+        success = false;
+        return res.status(400).json({ success , error: 'Please try to enter the correct credentials' });
       }
 
       const data = {
@@ -91,8 +97,8 @@ router.post(
       };
 
       const authtoken = jwt.sign(data, JWT_SECRET);
-
-      res.json({ authtoken });
+      success = true;
+      res.json({ success , authtoken });
 
     } catch (error) {
       console.error(error.message);

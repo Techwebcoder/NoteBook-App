@@ -1,8 +1,15 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const NavBar = () => {
+const NavBar = (props) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    props.showAlert("Logged out successfully", "danger");
+    navigate("/login");
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
@@ -16,16 +23,20 @@ const NavBar = () => {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/" ? "active fw-bold" : ""}`}
+                className={`nav-link ${
+                  location.pathname === "/" ? "active fw-bold" : ""
+                }`}
                 to="/"
               >
                 Home
@@ -34,26 +45,31 @@ const NavBar = () => {
 
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/about" ? "active fw-bold" : ""}`}
+                className={`nav-link ${
+                  location.pathname === "/about" ? "active fw-bold" : ""
+                }`}
                 to="/about"
               >
                 About
               </Link>
             </li>
-
           </ul>
 
-          <form className="d-flex">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-            />
-            <button className="btn btn-outline-primary" type="submit">
-              Search
-            </button>
-          </form>
+          {!localStorage.getItem("token") ? (
+            <form className="d-flex">
+              <Link className="btn btn-primary mx-1" to="/login">
+                Login
+              </Link>
 
+              <Link className="btn btn-primary mx-1" to="/signup">
+                Signup
+              </Link>
+            </form>
+          ) : (
+            <button className="btn btn-danger" onClick={handleLogout}>
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

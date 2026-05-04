@@ -141,6 +141,7 @@ const Notes = (props) => {
               </button>
 
               <button
+                disabled={note.title.length < 5 || note.description.length < 5}
                 type="button"
                 className="btn btn-primary"
                 onClick={handleClick}
@@ -155,17 +156,22 @@ const Notes = (props) => {
       <div className="row my-3">
         <h2>Your Notes</h2>
 
-        {notes.map((note) => {
-          return (
-            <NoteItem
-              key={note._id}
-              note={note}
-              deleteNote={deleteNote}
-              updateNote={updateNote}
-              showAlert={props.showAlert}
-            />
-          );
-        })}
+        {Array.isArray(notes) && notes.length === 0 && (
+          <p className="text-muted">No notes to display</p>
+        )}
+
+        {Array.isArray(notes) &&
+          notes.map((note) => {
+            return (
+              <NoteItem
+                key={note._id}
+                note={note}
+                deleteNote={deleteNote}
+                updateNote={updateNote}
+                showAlert={props.showAlert}
+              />
+            );
+          })}
       </div>
     </>
   );
